@@ -293,6 +293,8 @@ How to document with markdown:
 
 | Date       | Change                                                                              |
 |------------|-------------------------------------------------------------------------------------|
+| 2025-10-26 | Made timing functions overrun safe.                                                 |
+| 2025-10-26 | Added getMaxWaterSensors() and used WTR_ENDMARK as delimiter                        |
 | 2021-06-05 | waterSensorRead() implemented and limited sensor readings to one second by default. |
 | 2021-05-27 | First working version as Library.                                                   |
 |            | Before this the functions were part of a main.cpp                                   |
