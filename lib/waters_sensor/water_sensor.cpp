@@ -9,13 +9,20 @@ struct waterSensorData {
     unsigned long t0 = 0;
 };
 
-waterSensorData waterSensorArray[WATER_SENSORS];
+waterSensorData waterSensorArray[WTR_ENDMARK];
 
 // PRIVATE function declaration
 int sensorValue(waterSensors sensor);
 
-// PUBLIC function defintion
-void waterSensorInit(waterSensors sensor, int sensorPin, int powerPin) {
+// PUBLIC function definition
+
+int getMaxWaterSensors()
+{
+    return WTR_ENDMARK;
+}
+
+void waterSensorInit(waterSensors sensor, int sensorPin, int powerPin)
+{
     waterSensorArray[sensor].sensorPin = sensorPin;
     waterSensorArray[sensor].powerPin = powerPin;
     waterSensorArray[sensor].value = 0;
@@ -23,9 +30,11 @@ void waterSensorInit(waterSensors sensor, int sensorPin, int powerPin) {
     pinMode(powerPin, OUTPUT);
     digitalWrite(powerPin, LOW);        // start with sensor off
 }
-int waterSensorRead(waterSensors sensor) {
-    unsigned long ms;
-    if ((ms = millis()) > (waterSensorArray[sensor].t0 + WTR_SNSR_MAXREADTIME)) {
+
+int waterSensorRead(waterSensors sensor)
+{
+    unsigned long ms = millis();
+    if (ms - waterSensorArray[sensor].t0 >= WTR_SNSR_MAXREADTIME) {
         waterSensorArray[sensor].t0 = ms;
         waterSensorArray[sensor].value = sensorValue(sensor);
         return waterSensorArray[sensor].value;
@@ -33,12 +42,16 @@ int waterSensorRead(waterSensors sensor) {
         return waterSensorArray[sensor].value;
     }
 }
-bool isDry(waterSensors sensor, int threshold) {
+
+bool isDry(waterSensors sensor, int threshold)
+{
     return waterSensorRead(sensor) < threshold;
 }
 
 // PRIVATE function definition
-int sensorValue(waterSensors sensor) {
+
+int sensorValue(waterSensors sensor)
+{
     int value;
     // 1) switch the power of the sensor on
     // 2) read the #value of the water sensor
